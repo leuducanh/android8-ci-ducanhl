@@ -1,23 +1,39 @@
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
  * Created by l on 2/19/2017.
  */
-public class GameWindow extends Frame{
+public class GameWindow extends Frame {
 
+    private static final int SPEED = 10;
+    private static final int FRAME_WIDTH = 600;
+    private static final int FRAME_HEIGHT = 800;
+
+    Graphics offScreenGraphics;
+    BufferedImage offScreenImage;
     Image backgroundImage;
     Image planeImage;
     Image landImage;
     private int planeX,planeY;
+    private int move = -1;
 
     public GameWindow(){
         setVisible(true);
-        setSize(400,600);
+        setSize(FRAME_WIDTH,FRAME_HEIGHT);
+
+
+        offScreenImage = new BufferedImage(FRAME_WIDTH,FRAME_HEIGHT,BufferedImage.TYPE_INT_ARGB);
+
+//        offScreenImage = (BufferedImage) createImage(FRAME_WIDTH,FRAME_HEIGHT);
+//        offScreenGraphics = offScreenImage.getGraphics();
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -34,70 +50,97 @@ public class GameWindow extends Frame{
             }
         });
 
-        //1:load image
+        backgroundImage = loadImageFromRes("background.png");
+        planeImage = loadImageFromRes("plane4.png");
+        landImage = loadImageFromRes("island.png");
 
-        //2:draw image
-            backgroundImage = loadImageFromRes("background.png");
-            planeImage = loadImageFromRes("plane4.png");
-            landImage = loadImageFromRes("island.png");
+        planeX = (FRAME_WIDTH - 45)/2;
+        planeY = FRAME_HEIGHT - 35;
 
-        planeX = (400 - 45)/2;
-        planeY = 600 - 35;
-
-            update(getGraphics());
+        update(getGraphics());
 
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-                int x, y;
-                x = planeX;
-                y = planeY;
-                switch (e.getKeyCode()){
-                    case (KeyEvent.VK_RIGHT):{
-                        planeX += 5;
-                        break;
-                    }
-                    case (KeyEvent.VK_LEFT):{
-                        planeX -= 5;
-                        break;
-                    }
-                    case (KeyEvent.VK_UP):{
-                        planeY -= 5;
-                        break;
-                    }
-                    case (KeyEvent.VK_DOWN):{
-                        planeY += 5;
-                        break;
-                    }
-                }
-                if(!checkCoordinatePlane()){
-                    planeX = x;
-                    planeY = y;
-                }
-                repaint();
-                repaint();
+
+                move = e.getKeyCode();
             }
+
 
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
-
+                if(move == e.getKeyCode()){
+                    move = -1;
+                }
             }
         });
 
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true){
+                    try {
+                        Thread.sleep(17);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    calculatePlaneCoordinate();
+                    repaint();
+                }
+            }
+        });
+
+        thread.start();
+
     }
-
-
 
     @Override
     public void update(Graphics g) {
-        g.drawImage(backgroundImage,0,0,400,600,null);
-        g.drawImage(planeImage,planeX,planeY,45,35,null);
+        if(offScreenImage != null){
+            offScreenGraphics = offScreenImage.getGraphics();
+            offScreenGraphics.drawImage(backgroundImage,0,0,FRAME_WIDTH,FRAME_HEIGHT,null);
+            offScreenGraphics.drawImage(planeImage,planeX,planeY,45,35,null);
+            g.drawImage(offScreenImage,0,0,null);
+        }
+
+
+//        g.drawImage(backgroundImage,0,0,FRAME_WIDTH,FRAME_HEIGHT,null);
+//        g.drawImage(planeImage,planeX,planeY,45,35,null);
+    }
+
+    private void calculatePlaneCoordinate(){
+        int x, y;
+        x = planeX;
+        y = planeY;
+
+        switch (move){
+            case (KeyEvent.VK_RIGHT):{
+                planeX += SPEED;
+                break;
+            }
+            case (KeyEvent.VK_LEFT):{
+                planeX -= SPEED;
+                break;
+            }
+            case (KeyEvent.VK_UP):{
+                planeY -= SPEED;
+                break;
+            }
+            case (KeyEvent.VK_DOWN):{
+                planeY += SPEED;
+                break;
+            }
+        }
+        if(!checkCoordinatePlane()){
+            planeX = x;
+            planeY = y;
+        }
     }
 
     private boolean checkCoordinatePlane(){
-        if((planeX > 400 - 45) || (planeX < 0) || (planeY > 600 - 35) || (planeY < 35)) {
+        if((planeX > FRAME_WIDTH - 45) || (planeX < 0) || (planeY > FRAME_HEIGHT - 35) || (planeY < 35)) {
             return false;
         }
         return true;
