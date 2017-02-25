@@ -25,9 +25,11 @@ public class GameWindow extends Frame {
     Image landImage;
     Image enemyPlaneImage;
     Image enemyBullet;
+    BufferedImage explosionImage;
 
     Vector<PlayerBullet> playerBulletList;
     Vector<EnemyPlane> enemyPlaneList;
+    Vector<EnemyPlane> enemyPlaneListDestroy;
 
 
     int enemyX,enemyY;
@@ -35,7 +37,7 @@ public class GameWindow extends Frame {
     int move = -1;
     int shoot = -1;
 
-    int demNguoc = 10;
+    long now = System.currentTimeMillis();
 
     PlayerPlane playerPlane;
 
@@ -45,6 +47,7 @@ public class GameWindow extends Frame {
 
         playerBulletList = new Vector<>();
         enemyPlaneList = new Vector<>();
+        enemyPlaneListDestroy = new Vector<>();
 
         offScreenImage = new BufferedImage(FRAME_WIDTH,FRAME_HEIGHT,BufferedImage.TYPE_INT_ARGB);
 
@@ -72,6 +75,7 @@ public class GameWindow extends Frame {
         planeImage = loadImageFromRes("plane4.png");
         enemyPlaneImage = loadImageFromRes("enemy_plane_white_1.png");
         landImage = loadImageFromRes("island.png");
+        explosionImage = (BufferedImage) loadImageFromRes("explosion.png");
 
         enemyX = FRAME_WIDTH / 2;
         enemyY = 35/2;
@@ -110,17 +114,18 @@ public class GameWindow extends Frame {
             @Override
             public void run() {
                 while(true){
-                    demNguoc--;
                     try {
                         Thread.sleep(17);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     calculatePlaneCoordinate();
-                    calculateEnemyPlaneCoordinate();
                     calculatePlayerBullet();
-                    if(demNguoc == 0){
-                        calculateEnemyPlaneCoordinate();
+                    calculateEnemyBullet();
+                    calculateEnemyPlaneCoordinate();
+                    if(System.currentTimeMillis() - now > 1000){
+                        now = System.currentTimeMillis();
+                        addEnemyPlane();
                     }
                     repaint();
                 }
@@ -146,8 +151,21 @@ public class GameWindow extends Frame {
             if(enemyPlaneList != null){
                 for(int i = 0;i < enemyPlaneList.size();i++){
                     offScreenGraphics.drawImage(enemyPlaneList.get(i).image,enemyPlaneList.get(i).x,enemyPlaneList.get(i).y,45,35,null);
+                    Vector<EnemyBullet> enemyBullets = enemyPlaneList.get(i).enemyBulletList;
+                    for(int j = 0;j < enemyBullets.size();j++){
+                        if(enemyBullets.get(j) != null){
+                            offScreenGraphics.drawImage(enemyBullets.get(j).image,enemyBullets.get(j).x,enemyBullets.get(j).y,45/2,35/2,null);
+
+                        }
+                    }
                 }
             }
+            if(enemyPlaneListDestroy != null){
+                for(int i = 0;i < enemyPlaneListDestroy.size();i++){
+                    offScreenGraphics.drawImage(enemyPlaneListDestroy.get(i).image,enemyPlaneListDestroy.get(i).x,enemyPlaneListDestroy.get(i).y,45,35,null);
+                }
+            }
+
             g.drawImage(offScreenImage,0,0,null);
         }
     }
@@ -173,23 +191,71 @@ public class GameWindow extends Frame {
         }
     }
 
-    private void calculateEnemyPlaneCoordinate(){
+    private void addEnemyPlane(){
         Random r = new Random();
-        demNguoc = r.nextInt(10000);
-        int sl = r.nextInt(3);
+        int sl = r.nextInt(7);
         for(int i = 0;i < sl;i++){
             EnemyPlane enemyPlane = new EnemyPlane();
             enemyPlane.x = r.nextInt(600);
             enemyPlane.y = 0;
-            enemyPlane.speed = 10;
+            enemyPlane.speed = 6;
             enemyPlane.image = enemyPlaneImage;
+            enemyPlane.enemyBulletList = new Vector<>();
             enemyPlaneList.add(enemyPlane);
         }
+    }
 
+    private void calculateEnemyPlaneCoordinate(){
         for(int i = 0;i < enemyPlaneList.size();i++){
             enemyPlaneList.get(i).y += enemyPlaneList.get(i).speed;
             if(enemyPlaneList.get(i).y > 800){
                 enemyPlaneList.remove(i);
+            }
+            if(enemyPlaneList.size() != 0){
+                for(int j = 0;j < playerBulletList.size();j++){
+                    int xPBu = playerBulletList.get(j).x;
+                    int yPBu = playerBulletList.get(j).y;
+                    int xEnPla = enemyPlaneList.get(i).x;
+
+                    int yEnPla = enemyPlaneList.get(i).y;
+                    if(xPBu <= xEnPla + 45 && xPBu >= xEnPla && yPBu <= yEnPla + 35 && yPBu >= yEnPla){
+                        enemyPlaneListDestroy.add(enemyPlaneList.get(i));
+                        enemyPlaneList.remove(i);
+                        break;
+                    }
+                }
+            }
+        }
+        for(int i = 0;i < enemyPlaneListDestroy.size();i++){
+            enemyPlaneListDestroy.get(i).image =  (BufferedImage)explosionImage.getSubimage(34*enemyPlaneListDestroy.get(i).explosionState,0,34,34);
+            if(System.currentTimeMillis() % 5 == 0){
+                enemyPlaneListDestroy.get(i).explosionState += 1;
+            }
+            if(enemyPlaneListDestroy.get(i).explosionState == 5){
+                enemyPlaneListDestroy.remove(i);
+            }
+        }
+    }
+
+    private void calculateEnemyBullet(){
+        for(int i = 0 ;i < enemyPlaneList.size();i++){
+            EnemyPlane eP = enemyPlaneList.get(i);
+            if((System.currentTimeMillis() - eP.countdownToShoot) > 500){
+                eP.countdownToShoot = System.currentTimeMillis();
+                EnemyBullet eB = new EnemyBullet();
+                eB.speed = 15;
+                eB.x = eP.x + 45/2 - 45/2/2 ;
+                eB.y = eP.y + 35/2;
+                eB.image = ImageLoader.loadImageFromRes("bullet-double.png");
+                eP.enemyBulletList.add(eB);
+            }
+
+            for(int j = 0;j < eP.enemyBulletList.size();j++){
+                EnemyBullet eB = eP.enemyBulletList.get(j);
+                eB.y += eB.speed;
+                if(eB.y > 800){
+                    eP.enemyBulletList.remove(j);
+                }
             }
         }
     }
@@ -224,6 +290,7 @@ public class GameWindow extends Frame {
         }
 
     }
+
 
     private boolean checkCoordinatePlane(){
         if((playerPlane.x > FRAME_WIDTH - 45) || (playerPlane.x < 0) || (playerPlane.y > FRAME_HEIGHT - 35) || (playerPlane.y < 35)) {

@@ -5,7 +5,9 @@ import java.util.Random;
  */
 public class rec {
     public static void main(String[] args) {
-        Random r = new Random(10);
-        System.out.println(r.nextInt());
+        while(true){
+            Random r = new Random();
+            System.out.println(r.nextInt(5));
+        }
     }
 }
