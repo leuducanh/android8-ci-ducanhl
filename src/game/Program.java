@@ -1,5 +1,4 @@
-import javax.swing.*;
-import java.util.BitSet;
+package game;
 
 /**
  * Created by l on 2/19/2017.
