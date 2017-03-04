@@ -1,5 +1,6 @@
 package controllers;
 
+import autoload.AutoLoadImage;
 import models.GameModel;
 import models.PlayerBulletModel;
 import utils.Utils;
@@ -18,15 +19,60 @@ public class PlayerBulletController extends GameController{
         super(model, view);
     }
 
-    public PlayerBulletController(int x, int y, int width, int height) {
-        super(new PlayerBulletModel(x,y,width,height),new PlayerBulletView(Utils.loadImageFromRes("bullet.png")));
+    public PlayerBulletController(int x, int y, int width, int height,int bulletType) {
+        super(new PlayerBulletModel(x,y,width,height,bulletType),new PlayerBulletView(Utils.loadImageFromRes("bullet.png")));
     }
 
     public void run(){
-        ((PlayerBulletModel)model).fly();
+        if(model instanceof PlayerBulletModel){
+            switch (((PlayerBulletModel) model).getBulletType()){
+                case(2):{
+                    ((PlayerBulletModel) model).moveLeftUp();
+                    break;
+                }
+                case (3):{
+                    ((PlayerBulletModel) model).moveRightUp();
+                    break;
+                }
+                default:{
+                    ((PlayerBulletModel) model).fly();
+                }
+            }
+
+            view.setImage(factoryImage(((PlayerBulletModel) model).getBulletType()));
+        }
     }
 
     public PlayerBulletModel getModel() {
         return (PlayerBulletModel) model;
+    }
+
+    public Image factoryImage(int i){
+        switch (i){
+            case(0):{
+                return AutoLoadImage.bulletImageMap.get("bullet");
+            }
+            case(1):{
+                return AutoLoadImage.bulletImageMap.get("bullet-double");
+
+            }
+            case(2):{
+                return  AutoLoadImage.bulletImageMap.get("bullet-left");
+
+            }
+            case(3):{
+                return  AutoLoadImage.bulletImageMap.get("bullet-right");
+
+            }
+            case(4):{
+                return AutoLoadImage.bulletImageMap.get("bullet-round");
+
+            }
+            case(5):{
+                return AutoLoadImage.bulletImageMap.get("bullet-single");
+
+            }
+        }
+        return null;
     }
 }

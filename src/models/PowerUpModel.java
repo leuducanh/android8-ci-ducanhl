@@ -151,4 +151,11 @@ public class PowerUpModel extends GameModel {
     public boolean isInvisible(){
         return invisible;
     }
+
+    @Override
+    public void collisionHandler(GameModel otherGameModel) {
+        if(otherGameModel instanceof PlayerPlaneModel){
+            invisible = false;
+        }
+    }
 }

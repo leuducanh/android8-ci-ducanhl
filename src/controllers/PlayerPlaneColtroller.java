@@ -17,19 +17,27 @@ public class PlayerPlaneColtroller extends GameController{
 
     public void movePlayerPlaneToLeft(){
         ((PlayerPlaneModel)model).moveLeft();
+        ((PlayerPlaneModel)model).decrePowerUpTime();
     }
 
     public void movePlayerPlaneToRight(){
         ((PlayerPlaneModel)model).moveRight();
+        ((PlayerPlaneModel)model).decrePowerUpTime();
+
     }
 
     public void movePlayerPlaneUp(){
         ((PlayerPlaneModel)model).moveUp();
+        ((PlayerPlaneModel)model).decrePowerUpTime();
+
     }
 
     public void movePlayerPlaneDown(){
         ((PlayerPlaneModel)model).moveDown();
+        ((PlayerPlaneModel)model).decrePowerUpTime();
+
     }
+
 
     public PlayerPlaneModel getModel() {
         return (PlayerPlaneModel) model;

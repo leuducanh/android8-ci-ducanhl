@@ -6,11 +6,32 @@ package models;
 public class PlayerBulletModel extends GameModel{
     public static final int PLAYERBULLET_SPEED = 10;
 
-
-    public PlayerBulletModel(int x, int y, int width, int height) {
+    private boolean collision;
+    private int bulletType;
+    private boolean visible;
+    public PlayerBulletModel(int x, int y, int width, int height,int bulletType) {
         super(x, y, width, height);
+
+        this.bulletType = bulletType;
+        collision = false;
+        visible = true;
     }
 
+    public boolean isCollision() {
+        return collision;
+    }
+
+    public int getBulletType() {
+        return bulletType;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
 
     public int getX() {
         return x;
@@ -27,8 +48,26 @@ public class PlayerBulletModel extends GameModel{
     public int getHeight() {
         return height;
     }
-    
+
+    @Override
+    public void collisionHandler(GameModel otherGameModel) {
+        if(otherGameModel instanceof EnemyPlaneModel){
+            collision = true;
+            ((EnemyPlaneModel) otherGameModel).setDestroy(true);
+        }
+    }
+
     public void fly(){
         y -= PLAYERBULLET_SPEED;
+    }
+
+    public void moveRightUp(){
+        y -= PLAYERBULLET_SPEED;
+        x += PLAYERBULLET_SPEED;
+    }
+
+    public void moveLeftUp(){
+        y -= PLAYERBULLET_SPEED;
+        x -= PLAYERBULLET_SPEED;
     }
 }

@@ -11,6 +11,11 @@ public class IslandModel extends GameModel{
         super(x, y, width, height);
     }
 
+    @Override
+    public void collisionHandler(GameModel otherGameModel) {
+
+    }
+
     public void moveDown(){
         y += SPEED_ISLAND;
     }

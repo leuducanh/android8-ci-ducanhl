@@ -9,6 +9,8 @@ public class PlayerPlaneModel extends GameModel {
 
     public static final int SPEED = 10;
 
+    private boolean isPowerUp;
+    private int powerUpTime;
     public PlayerPlaneModel(int x, int y, int width, int height) {
         super(x, y, width, height);
     }
@@ -27,6 +29,31 @@ public class PlayerPlaneModel extends GameModel {
 
     public int getHeight() {
         return height;
+    }
+
+    public boolean isPowerUp() {
+        return isPowerUp;
+    }
+
+    public void setPowerUp(boolean powerUp) {
+        isPowerUp = powerUp;
+    }
+
+    @Override
+    public void collisionHandler(GameModel otherGameModel) {
+        if(otherGameModel instanceof PowerUpModel){
+            if(((PowerUpModel) otherGameModel).getPowerUpType() == 0){
+                isPowerUp = true;
+                powerUpTime = 10000;
+            }
+        }
+    }
+
+    public void decrePowerUpTime(){
+        powerUpTime -= 1;
+        if(powerUpTime == 0){
+            isPowerUp = false;
+        }
     }
 
     public void moveLeft(){

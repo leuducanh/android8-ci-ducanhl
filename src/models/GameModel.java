@@ -5,7 +5,7 @@ import java.awt.*;
 /**
  * Created by l on 2/28/2017.
  */
-public class GameModel {
+public abstract class GameModel {
     public static final int MIN_WIDTH_OF_MODEL = 30;
     public static final int MIN_HEIGHT_OF_MODEL = 30;
     public static final int MAX_WIDTH_OF_MODEL = 70;
@@ -39,10 +39,19 @@ public class GameModel {
         return height;
     }
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     public boolean checkContact(GameModel otherGameModel){
         Rectangle r1 = new Rectangle(x,y,width,height);
         Rectangle r2 = new Rectangle(otherGameModel.x,otherGameModel.y,otherGameModel.width,otherGameModel.height);
         return (r1.intersects(r2));
     }
 
+    public abstract void collisionHandler(GameModel otherGameModel);
 }

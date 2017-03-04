@@ -8,4 +8,9 @@ public class BackgroundModel extends GameModel {
     public BackgroundModel(int x, int y, int width, int height) {
         super(x, y, width, height);
     }
+
+    @Override
+    public void collisionHandler(GameModel otherGameModel) {
+
+    }
 }

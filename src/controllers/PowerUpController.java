@@ -51,7 +51,7 @@ public class PowerUpController extends GameController {
                 imageCount++;
 
                 if(imageCount > 10){
-                    imageCount = -100;
+                    imageCount = -10;
                 }
                 return AutoLoadImage.powerupImageMap.get(s);
             }

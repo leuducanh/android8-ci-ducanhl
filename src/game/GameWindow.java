@@ -5,6 +5,7 @@ import controllers.*;
 import models.EnemyPlaneModel;
 import models.GameModel;
 import models.PlayerBulletModel;
+import models.PlayerPlaneModel;
 import utils.CustomRandom;
 import utils.Utils;
 import views.PlayerBulletView;
@@ -180,15 +181,23 @@ public class GameWindow extends Frame {
     }
 
     private void addPlayerBullet(){
-        PlayerBulletController playerBulletController = new PlayerBulletController(playerPlaneColtroller.getModel().getX() + 45/2 - 45/2/2,playerPlaneColtroller.getModel().getY() - 35/2, 10,30);
-        playerBulletControllers.add(playerBulletController);
+        if(((PlayerPlaneModel)playerPlaneColtroller.getModel()).isPowerUp()){
+            for(int i = 0;i < 3;i++){
+                PlayerBulletController playerBulletController = new PlayerBulletController(playerPlaneColtroller.getModel().getX() + 45/2 - 45/2/2,playerPlaneColtroller.getModel().getY() - 35/2, 10,30,i+1);
+                playerBulletControllers.add(playerBulletController);
+            }
+        }else{
+            PlayerBulletController playerBulletController = new PlayerBulletController(playerPlaneColtroller.getModel().getX() + 45/2 - 45/2/2,playerPlaneColtroller.getModel().getY() - 35/2, 10,30,0);
+            playerBulletControllers.add(playerBulletController);
+        }
+
     }
 
 
     private void checkAndAddPlayerBullet(){
         if(shoot == KeyEvent.VK_SPACE){
             if(playerBulletControllers.size() != 0){
-                if(Math.abs(playerBulletControllers.get(playerBulletControllers.size() - 1).getModel().getX() - (playerPlaneColtroller.getModel().getX() + 45/2 - 45/2/2)) > playerBulletControllers.get(0).getModel().getWidth() * 3){
+                if(Math.abs(playerBulletControllers.get(playerBulletControllers.size() - 1).getModel().getX() - (playerPlaneColtroller.getModel().getX() + 45/2 - 45/2/2)) > playerBulletControllers.get(0).getModel().getWidth() * 10){
                     addPlayerBullet();
                 }else if((playerPlaneColtroller.getModel().getY()-playerBulletControllers.get(playerBulletControllers.size()-1).getModel().getY() > playerBulletControllers.get(0).getModel().getHeight() * 2)){
                     addPlayerBullet();
@@ -213,6 +222,7 @@ public class GameWindow extends Frame {
         if(System.currentTimeMillis() - EnemyPlaneController.LAST_TIME_ADD_ENEMYPLANE > EnemyPlaneController.ADD_ENEMYPLANE_AFTER) {
             EnemyPlaneController.LAST_TIME_ADD_ENEMYPLANE = System.currentTimeMillis();
             int sl = CustomRandom.customNextInt(3);
+
             int planeHavePowerUp = -1;
 
             if(System.currentTimeMillis() - PowerUpController.LAST_TIME_POWERUP > PowerUpController.ADD_POWERUP_AFTER){
@@ -222,9 +232,11 @@ public class GameWindow extends Frame {
                 }
             }
 
+            int enemyType = CustomRandom.customNextInt(2);
+            int specialMove = CustomRandom.customNextInt(2);
+            int limit = CustomRandom.customNextInt(100) + 200;
             for (int i = 0; i < sl; i++) {
-                System.out.println((i == planeHavePowerUp)?true:false + "");
-                EnemyPlaneController enemyPlaneController = new EnemyPlaneController(CustomRandom.customNextInt(600), 0, 40,40,(i == planeHavePowerUp)?true:false,0);
+                EnemyPlaneController enemyPlaneController = new EnemyPlaneController(CustomRandom.customNextInt(600), 0, 40,40,(i == planeHavePowerUp)?true:false,enemyType,limit,specialMove);
                 enemyPlaneControllers.add(enemyPlaneController);
             }
         }
@@ -246,9 +258,8 @@ public class GameWindow extends Frame {
         for(int i = 0;i < enemyPlaneControllers.size();i++){
             EnemyPlaneModel e = enemyPlaneControllers.get(i).getModel();
             if(!e.isInvisible()){
-                System.out.println(e.isHavePowerUp());
                 if(e.getDestroy() && e.isHavePowerUp()){
-                    PowerUpController powerUpController = new PowerUpController(e.getX(),e.getY(),e.getWidth(),e.getHeight(),playerPlaneColtroller,e.getPowerUpType());
+                    PowerUpController powerUpController = new PowerUpController(e.getX(),e.getY(),30,30,playerPlaneColtroller,e.getPowerUpType());
                     powerUpControllers.add(powerUpController);
                 }
                 enemyPlaneControllers.removeElementAt(i);
@@ -259,6 +270,10 @@ public class GameWindow extends Frame {
     private void calculatePowerUp(){
         for(int i = 0;i < powerUpControllers.size();i++){
             powerUpControllers.get(i).run();
+            if(playerPlaneColtroller.getModel().checkContact(powerUpControllers.get(i).getModel())){
+                playerPlaneColtroller.getModel().collisionHandler(powerUpControllers.get(i).getModel());
+                powerUpControllers.get(i).getModel().collisionHandler(playerPlaneColtroller.getModel());
+            }
         }
 
         for(int i = 0;i < powerUpControllers.size();i++){
@@ -274,7 +289,7 @@ public class GameWindow extends Frame {
             EnemyPlaneController eP = enemyPlaneControllers.get(i);
             if((System.currentTimeMillis() - eP.getModel().getLastTimeShot()) > eP.getModel().getSecondToshot()*1000){
                 eP.getModel().setLastTimeShot(System.currentTimeMillis());
-                EnemyBulletController eB = new EnemyBulletController(eP.getModel().getX() + eP.getModel().getWidth()/2 - 30/2,eP.getModel().getY(),30,100);
+                EnemyBulletController eB = new EnemyBulletController(eP.getModel().getX() + eP.getModel().getWidth()/2 - 30/2,eP.getModel().getY()-10,30,100);
                 enemyBulletControllers.add(eB);
             }
         }
