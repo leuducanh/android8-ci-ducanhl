@@ -9,41 +9,29 @@ import java.awt.*;
 /**
  * Created by l on 2/27/2017.
  */
-public class PlayerPlaneColtroller {
-
-    PlayerPlaneModel model;
-    PlayerPlaneView view;
-
-    public PlayerPlaneColtroller(PlayerPlaneModel model, PlayerPlaneView view) {
-        this.model = model;
-        this.view = view;
-    }
+public class PlayerPlaneColtroller extends GameController{
 
     public PlayerPlaneColtroller(int x,int y,int width,int height){
-        this(new PlayerPlaneModel(x,y,width,height),new PlayerPlaneView(Utils.loadImageFromRes("plane3.png")));
+        super(new PlayerPlaneModel(x,y,width,height),new PlayerPlaneView(Utils.loadImageFromRes("plane3.png")));
     }
 
     public void movePlayerPlaneToLeft(){
-        model.moveLeft();
+        ((PlayerPlaneModel)model).moveLeft();
     }
 
     public void movePlayerPlaneToRight(){
-        model.moveRight();
+        ((PlayerPlaneModel)model).moveRight();
     }
 
     public void movePlayerPlaneUp(){
-        model.moveUp();
+        ((PlayerPlaneModel)model).moveUp();
     }
 
     public void movePlayerPlaneDown(){
-        model.moveDown();
-    }
-
-    public void draw(Graphics graphics){
-        view.draw(graphics,model);
+        ((PlayerPlaneModel)model).moveDown();
     }
 
     public PlayerPlaneModel getModel() {
-        return model;
+        return (PlayerPlaneModel) model;
     }
 }

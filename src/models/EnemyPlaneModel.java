@@ -3,28 +3,32 @@ package models;
 /**
  * Created by l on 2/27/2017.
  */
-public class EnemyPlaneModel {
+public class EnemyPlaneModel extends GameModel{
     public static final int ENEMYPLANE_SPEED = 5;
+    public static final long TIME_TO_HAVE_POWERUP = 4000;
+    public static final long LAST_TIME_POWERUP = System.currentTimeMillis();
 
-    private int x;
-    private int y;
-    private int width;
-    private int height;
+    private int enemyPlaneType;
     private boolean destroy;
     private boolean invisible;
     private int secondToshot;
     private long lastTimeShot;
 
-    public EnemyPlaneModel(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+    private boolean havePowerUp;
+    private int powerUpType;
+    public EnemyPlaneModel(int x, int y, int width, int height,boolean havePowerUp,int enemyPlaneType) {
+        super(x, y, width, height);
         this.destroy = false;
         this.invisible = true;
+        this.enemyPlaneType = enemyPlaneType;
+        this.havePowerUp = havePowerUp;
+        if(havePowerUp){
+            powerUpType = 1;
+        }
         secondToshot = 1;
         lastTimeShot = System.currentTimeMillis();
     }
+
 
     public static int getEnemyplaneSpeed() {
         return ENEMYPLANE_SPEED;
@@ -77,4 +81,25 @@ public class EnemyPlaneModel {
     public void setLastTimeShot(long lastTimeShot) {
         this.lastTimeShot = lastTimeShot;
     }
+
+    public boolean isHavePowerUp() {
+        return havePowerUp;
+    }
+
+    public int getPowerUpType() {
+        return powerUpType;
+    }
+
+    public void setHavePowerUp(boolean havePowerUp) {
+        this.havePowerUp = havePowerUp;
+    }
+
+    public int getEnemyPlaneType() {
+        return enemyPlaneType;
+    }
+
+    public void setPowerUpType(int powerUpType) {
+        this.powerUpType = powerUpType;
+    }
+
 }

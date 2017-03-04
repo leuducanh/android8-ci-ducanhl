@@ -1,7 +1,9 @@
 package controllers;
 
+import models.GameModel;
 import models.PlayerBulletModel;
 import utils.Utils;
+import views.GameView;
 import views.PlayerBulletView;
 
 import java.awt.*;
@@ -10,25 +12,21 @@ import java.util.Vector;
 /**
  * Created by l on 2/26/2017.
  */
-public class PlayerBulletController {
+public class PlayerBulletController extends GameController{
 
-    private PlayerBulletModel model;
-    private PlayerBulletView view;
+    public PlayerBulletController(GameModel model, GameView view) {
+        super(model, view);
+    }
 
-    public PlayerBulletController(int x,int y,int width,int height) {
-        model = new PlayerBulletModel(x,y,width,height);
-        view = new PlayerBulletView(Utils.loadImageFromRes("bullet.png"));
+    public PlayerBulletController(int x, int y, int width, int height) {
+        super(new PlayerBulletModel(x,y,width,height),new PlayerBulletView(Utils.loadImageFromRes("bullet.png")));
     }
 
     public void run(){
-            model.fly();
+        ((PlayerBulletModel)model).fly();
     }
 
     public PlayerBulletModel getModel() {
-        return model;
-    }
-
-    public void draw(Graphics graphics){
-            view.draw(graphics,model);
+        return (PlayerBulletModel) model;
     }
 }

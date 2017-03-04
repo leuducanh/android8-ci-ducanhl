@@ -5,19 +5,12 @@ import game.GameWindow;
 /**
  * Created by l on 2/27/2017.
  */
-public class PlayerPlaneModel {
+public class PlayerPlaneModel extends GameModel {
 
     public static final int SPEED = 10;
-    private int x;
-    private int y;
-    private int width;
-    private int height;
 
     public PlayerPlaneModel(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        super(x, y, width, height);
     }
 
     public int getX() {

@@ -3,19 +3,11 @@ package models;
 /**
  * Created by l on 2/27/2017.
  */
-public class EnemyBulletModel {
-    public static final int ENEMYBULLET_SPEED = 10;
-
-    private int x;
-    private int y;
-    private int width;
-    private int height;
+public class EnemyBulletModel extends GameModel{
+    public static final int ENEMYBULLET_SPEED = 7;
 
     public EnemyBulletModel(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        super(x, y, width, height);
     }
 
     public int getX() {
