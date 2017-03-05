@@ -1,5 +1,6 @@
 package controllers;
 
+import autoload.AutoLoadImage;
 import models.PlayerPlaneModel;
 import utils.Utils;
 import views.PlayerPlaneView;
@@ -10,6 +11,9 @@ import java.awt.*;
  * Created by l on 2/27/2017.
  */
 public class PlayerPlaneColtroller extends GameController{
+
+    private int countToDrawDestroyState = 0;
+    private int countToDrawImage = 0;
 
     public PlayerPlaneColtroller(int x,int y,int width,int height){
         super(new PlayerPlaneModel(x,y,width,height),new PlayerPlaneView(Utils.loadImageFromRes("plane3.png")));
@@ -38,6 +42,23 @@ public class PlayerPlaneColtroller extends GameController{
 
     }
 
+    @Override
+    public void draw(Graphics graphics) {
+        if(model instanceof PlayerPlaneModel){
+            if(!((PlayerPlaneModel) model).isDestroy()){
+                view.setImage(Utils.loadImageFromRes("plane4.png"));
+            }else{
+                view.setImage(AutoLoadImage.explosionImageMap.get("explosion"+countToDrawDestroyState));
+                countToDrawDestroyState += 1;
+                if(countToDrawDestroyState == 10){
+                    ((PlayerPlaneModel) model).setVisible(false);
+                    countToDrawDestroyState = 9;
+                }
+            }
+        }
+
+        super.draw(graphics);
+    }
 
     public PlayerPlaneModel getModel() {
         return (PlayerPlaneModel) model;

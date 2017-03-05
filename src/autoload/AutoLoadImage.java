@@ -15,6 +15,8 @@ public class AutoLoadImage {
     public static HashMap<String,Image> whitePlaneImageMap;
     public static HashMap<String,Image> yellowPlaneImageMap;
     public static HashMap<String,Image> bulletImageMap;
+    public static HashMap<String,Image> bloodImageMap;
+    public static Image lazerShot;
 
     public static void init() {
         powerupImageMap = new HashMap<>();
@@ -22,6 +24,8 @@ public class AutoLoadImage {
         whitePlaneImageMap = new HashMap<>();
         yellowPlaneImageMap = new HashMap<>();
         bulletImageMap = new HashMap<>();
+        bloodImageMap = new HashMap<>();
+
         for(int i = 1;i <= 10;i++){
             powerupImageMap.put("frame-"+i, Utils.loadImageFromRes("frame-"+i+".png"));
         }
@@ -49,5 +53,12 @@ public class AutoLoadImage {
         bulletImageMap.put("bullet-right",Utils.loadImageFromRes("bullet-right.png"));
         bulletImageMap.put("bullet-round",Utils.loadImageFromRes("bullet-round.png"));
         bulletImageMap.put("bullet-single",Utils.loadImageFromRes("bullet-single.png"));
+
+        BufferedImage bloodImage = (BufferedImage) Utils.loadImageFromRes("bloodcut.png");
+        for(int i =0 ;i < 7;i++){
+            bloodImageMap.put("bloodcut"+i,bloodImage.getSubimage(64*i,0,64,64));
+        }
+
+        lazerShot = Utils.loadImageFromRes("laserGreenShot.png");
     }
 }

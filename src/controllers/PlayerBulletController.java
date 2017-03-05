@@ -15,6 +15,8 @@ import java.util.Vector;
  */
 public class PlayerBulletController extends GameController{
 
+    private int countToDrawCollisionBulletState = 0;
+
     public PlayerBulletController(GameModel model, GameView view) {
         super(model, view);
     }
@@ -38,8 +40,18 @@ public class PlayerBulletController extends GameController{
                     ((PlayerBulletModel) model).fly();
                 }
             }
+            if(((PlayerBulletModel) model).isCollision()){
+                view.setImage(AutoLoadImage.lazerShot);
+                countToDrawCollisionBulletState += 1;
+                ((PlayerBulletModel) model).increaseHeight();
+                ((PlayerBulletModel) model).increaseWidth();
+                if(countToDrawCollisionBulletState == 6){
+                    ((PlayerBulletModel) model).setVisible(false);
+                }
 
-            view.setImage(factoryImage(((PlayerBulletModel) model).getBulletType()));
+            }else{
+                view.setImage(factoryPlayerBulletImage(((PlayerBulletModel) model).getBulletType()));
+            }
         }
     }
 
@@ -47,7 +59,7 @@ public class PlayerBulletController extends GameController{
         return (PlayerBulletModel) model;
     }
 
-    public Image factoryImage(int i){
+    public Image factoryPlayerBulletImage(int i){
         switch (i){
             case(0):{
                 return AutoLoadImage.bulletImageMap.get("bullet");
@@ -75,4 +87,5 @@ public class PlayerBulletController extends GameController{
         }
         return null;
     }
+
 }

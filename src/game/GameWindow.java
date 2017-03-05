@@ -121,14 +121,20 @@ public class GameWindow extends Frame {
                     addIsland();
                     calculateIsland();
                     calculatePlaneCoordinate();
+
                     checkAndAddPlayerBullet();
                     calculatePlayerBullet();
+
                     addEnemyPlane();
                     calculateEnemyPlaneCoordinate();
                     addEnemyBullet();
                     calculateEnemyBullet();
                     calculatePowerUp();
                     repaint();
+
+                    if(!playerPlaneColtroller.getModel().isVisible()){
+                        break;
+                    }
                 }
             }
         });
@@ -150,17 +156,23 @@ public class GameWindow extends Frame {
                 }
             }
 
-            playerPlaneColtroller.draw(offScreenGraphics);
+            if(playerPlaneColtroller.getModel().isVisible()){
+                playerPlaneColtroller.draw(offScreenGraphics);
+            }
 
-            if(playerBulletControllers != null){
-                for(int i = 0;i < playerBulletControllers.size();i++){
-                    playerBulletControllers.get(i).draw(offScreenGraphics);
+            try{
+                if(playerBulletControllers != null){
+                    for(int i = 0;i < playerBulletControllers.size();i++){
+                        playerBulletControllers.get(i).draw(offScreenGraphics);
+                    }
                 }
+            }catch (Exception e){
+
             }
 
             if(enemyPlaneControllers != null){
                 for(int i = 0;i < enemyPlaneControllers.size();i++){
-                    enemyPlaneControllers.get(i).checkAndDraw(offScreenGraphics);
+                    enemyPlaneControllers.get(i).draw(offScreenGraphics);
                 }
             }
 
@@ -213,6 +225,11 @@ public class GameWindow extends Frame {
         for(int i = 0;i < playerBulletControllers.size();i++){
             playerBulletControllers.get(i).run();
             if(playerBulletControllers.get(i).getModel().getY() < 0){
+                playerBulletControllers.get(i).getModel().setVisible(false);
+            }
+        }
+        for(int i = 0;i < playerBulletControllers.size();i++){
+            if(!playerBulletControllers.get(i).getModel().isVisible()){
                 playerBulletControllers.removeElementAt(i);
             }
         }
@@ -249,9 +266,10 @@ public class GameWindow extends Frame {
                 enemyPlaneControllers.get(i).getModel().setInvisible(false);
             }
                 for(int j = 0;j < playerBulletControllers.size();j++){
-                    int xPBu = playerBulletControllers.get(j).getModel().getX();
-                    int yPBu = playerBulletControllers.get(j).getModel().getY();
-                    enemyPlaneControllers.get(i).checkBeingShotByPlayer(xPBu,yPBu);
+                    if(enemyPlaneControllers.get(i).getModel().checkContact(playerBulletControllers.get(j).getModel())){
+                        enemyPlaneControllers.get(i).getModel().collisionHandler(playerBulletControllers.get(j).getModel());
+                        playerBulletControllers.get(j).getModel().collisionHandler(enemyPlaneControllers.get(i).getModel());
+                    }
                 }
         }
 
@@ -298,7 +316,9 @@ public class GameWindow extends Frame {
     private void calculateEnemyBullet(){
         for(int i = 0;i < enemyBulletControllers.size();i++){
             enemyBulletControllers.get(i).run();
-
+            if(playerPlaneColtroller.getModel().checkContact(enemyBulletControllers.get(i).getModel())){
+                playerPlaneColtroller.getModel().collisionHandler(enemyBulletControllers.get(i).getModel());
+            }
             if(enemyBulletControllers.get(i).getModel().getY() >= FRAME_HEIGHT){
                 enemyBulletControllers.removeElementAt(i);
             }

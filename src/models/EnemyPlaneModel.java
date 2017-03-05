@@ -70,12 +70,11 @@ public class EnemyPlaneModel extends GameModel{
 
     @Override
     public void collisionHandler(GameModel otherGameModel) {
-
+        if(otherGameModel instanceof PlayerBulletModel){
+            destroy = true;
+        }
     }
 
-    public void setDestroy(boolean destroy) {
-        this.destroy = destroy;
-    }
 
     public boolean getDestroy() {
         return destroy;

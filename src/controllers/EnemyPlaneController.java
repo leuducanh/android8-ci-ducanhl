@@ -23,8 +23,6 @@ public class EnemyPlaneController extends GameController{
     private int countToDrawDestroyState = 0;
     private int countToDrawImage = 0;
 
-    private double angle = 1;
-
     public EnemyPlaneController(GameModel model, GameView view) {
         super(model,view);
     }
@@ -57,22 +55,23 @@ public class EnemyPlaneController extends GameController{
         }
     }
 
-    public void checkAndDraw(Graphics graphics){
+    public void draw(Graphics graphics){
         if(model instanceof EnemyPlaneModel){
             if(!((EnemyPlaneModel) model).getDestroy()){
                 view.setImage(factoryImage());
-                super.draw(graphics);
+
             }else{
                 view.setImage(AutoLoadImage.explosionImageMap.get("explosion"+countToDrawDestroyState));
                 ((EnemyPlaneModel) model).increaseHeight();
                 ((EnemyPlaneModel) model).increaseWidth();
-                view.draw(graphics,model);
                 countToDrawDestroyState += 1;
                 if(countToDrawDestroyState == 10){
                     ((EnemyPlaneModel) model).setInvisible(false);
                     countToDrawDestroyState = 9;
                 }
             }
+            view.draw(graphics,model);
+
         }
     }
 
@@ -80,15 +79,7 @@ public class EnemyPlaneController extends GameController{
         return (EnemyPlaneModel) model;
     }
 
-    public void checkBeingShotByPlayer(int xBullet,int yBullet){
-        int xEnemyPlane = model.getX();
-        int yEnemyPlane = model.getY();
-        int hEnemyPlane = model.getHeight();
-        int wEnemyPlane = model.getWidth();
-        if(xBullet <= xEnemyPlane +  wEnemyPlane && xBullet >= xEnemyPlane && yBullet <= yEnemyPlane + hEnemyPlane && yBullet >= yEnemyPlane){
-            ((EnemyPlaneModel)model).setDestroy(true);
-        }
-    }
+
 
     public Image factoryImage(){
         String s;

@@ -7,12 +7,38 @@ import game.GameWindow;
  */
 public class PlayerPlaneModel extends GameModel {
 
-    public static final int SPEED = 10;
+    public static final int SPEED = 17;
+
+    private boolean haveBulletPowerUp;
+    private int bulletPowerUpType;
+
+    private boolean haveRocketPowerUp;
+    private int powerUpTime;
 
     private boolean isPowerUp;
-    private int powerUpTime;
+
+    private boolean destroy;
+    private boolean visible;
     public PlayerPlaneModel(int x, int y, int width, int height) {
         super(x, y, width, height);
+
+        haveBulletPowerUp = false;
+
+        visible = true;
+        destroy = false;
+
+    }
+
+    public boolean isDestroy() {
+        return destroy;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
     public int getX() {
@@ -46,6 +72,9 @@ public class PlayerPlaneModel extends GameModel {
                 isPowerUp = true;
                 powerUpTime = 10000;
             }
+        }
+        if(otherGameModel instanceof EnemyBulletModel){
+            destroy = true;
         }
     }
 

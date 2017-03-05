@@ -8,6 +8,7 @@ public class PlayerBulletModel extends GameModel{
 
     private boolean collision;
     private int bulletType;
+
     private boolean visible;
     public PlayerBulletModel(int x, int y, int width, int height,int bulletType) {
         super(x, y, width, height);
@@ -49,11 +50,18 @@ public class PlayerBulletModel extends GameModel{
         return height;
     }
 
+    public void increaseWidth(){
+        this.width += 10;
+    }
+
+    public void increaseHeight(){
+        this.height += 10;
+    }
+
     @Override
     public void collisionHandler(GameModel otherGameModel) {
         if(otherGameModel instanceof EnemyPlaneModel){
             collision = true;
-            ((EnemyPlaneModel) otherGameModel).setDestroy(true);
         }
     }
 
