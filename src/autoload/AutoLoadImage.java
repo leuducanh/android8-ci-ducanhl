@@ -1,5 +1,6 @@
 package autoload;
 
+import controllers.EnemyPlaneController;
 import utils.Utils;
 
 import java.awt.*;
@@ -39,6 +40,7 @@ public class AutoLoadImage {
             }
         }
 
+
         for(int i = 1;i <= 3;i++){
             whitePlaneImageMap.put("enemy_plane_white_" + i,Utils.loadImageFromRes("enemy_plane_white_" + i + ".png"));
         }
@@ -60,5 +62,17 @@ public class AutoLoadImage {
         }
 
         lazerShot = Utils.loadImageFromRes("laserGreenShot.png");
+    }
+
+    public static HashMap<String,Image> enemyPlaneHashMapFactory(EnemyPlaneController.EnemyPlaneType type){
+        switch (type){
+            case ENEMYWHITE:{
+                return whitePlaneImageMap;
+            }
+            case ENEMYYELLOW:{
+                return yellowPlaneImageMap;
+            }
+        }
+        return null;
     }
 }

@@ -42,21 +42,19 @@ public class PlayerPlaneColtroller extends GameController{
 
     }
 
-    @Override
     public void draw(Graphics graphics) {
         if(model instanceof PlayerPlaneModel){
-            if(!((PlayerPlaneModel) model).isDestroy()){
+            if(!model.isDestroy()){
                 view.setImage(Utils.loadImageFromRes("plane4.png"));
             }else{
                 view.setImage(AutoLoadImage.explosionImageMap.get("explosion"+countToDrawDestroyState));
                 countToDrawDestroyState += 1;
                 if(countToDrawDestroyState == 10){
-                    ((PlayerPlaneModel) model).setVisible(false);
+                     model.setVisible(false);
                     countToDrawDestroyState = 9;
                 }
             }
         }
-
         super.draw(graphics);
     }
 

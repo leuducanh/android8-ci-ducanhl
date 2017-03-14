@@ -16,11 +16,17 @@ public abstract class GameModel {
     protected int width;
     protected int height;
 
+    protected boolean visible;
+    protected boolean destroy;
+
+
     public GameModel(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        visible = true;
+        destroy = false;
     }
 
     public int getX() {
@@ -54,4 +60,20 @@ public abstract class GameModel {
     }
 
     public abstract void collisionHandler(GameModel otherGameModel);
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public boolean isDestroy() {
+        return destroy;
+    }
+
+    public void setDestroy(boolean destroy) {
+        this.destroy = destroy;
+    }
 }

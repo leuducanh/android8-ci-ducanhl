@@ -1,17 +1,18 @@
 package controllers.bullet_behavior;
 
-import controllers.EnemyBulletController;
-import views.EnemyBulletView;
+import controllers.BulletController;
+import models.BulletModel;
+import views.BulletView;
 
 /**
  * Created by l on 3/12/2017.
  */
-public class EnemyBulletMoveRightDown extends EnemyBulletMoveBehavior {
+public class BulletMoveRightDown extends BulletMoveBehavior {
 
     @Override
-    public void move(EnemyBulletController enemyBulletController, EnemyBulletView view, EnemyBulletController.BulletType type) {
-        super.move(enemyBulletController, view, type);
+    public void move(BulletModel bulletModel, BulletView view, BulletController.BulletType type) {
+        super.move(bulletModel, view, type);
 
-        enemyBulletController.getModel().moveRightDown();
+        bulletModel.moveRightDown();
     }
 }

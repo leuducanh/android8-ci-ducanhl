@@ -31,7 +31,15 @@ public class EnemyBulletModel extends GameModel{
 
     }
 
-    public void move(){
+    public void moveTopDown(){
         y += ENEMYBULLET_SPEED;
+    }
+    public void moveLeftDown(){
+        y += ENEMYBULLET_SPEED;
+        x -= ENEMYBULLET_SPEED;
+    }
+    public void moveRightDown(){
+        y += ENEMYBULLET_SPEED;
+        x += ENEMYBULLET_SPEED;
     }
 }

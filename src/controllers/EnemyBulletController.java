@@ -22,12 +22,13 @@ public class EnemyBulletController extends GameController{
         this(new EnemyBulletModel(x,y,width,height),new EnemyBulletView(Utils.loadImageFromRes("enemy_bullet.png")));
     }
 
-    public void run(){
-        ((EnemyBulletModel)model).move();
+    @Override
+    public void run() {
     }
-
 
     public EnemyBulletModel getModel() {
         return (EnemyBulletModel) model;
     }
+
+
 }

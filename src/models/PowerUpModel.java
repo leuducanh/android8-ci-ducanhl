@@ -158,4 +158,5 @@ public class PowerUpModel extends GameModel {
             invisible = false;
         }
     }
+
 }

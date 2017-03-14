@@ -17,7 +17,15 @@ public class GameController {
         this.view = view;
     }
 
+    public void run(){
+
+    }
+
     public void draw(Graphics graphics){
         view.draw(graphics,model);
+    }
+
+    public GameModel getModel() {
+        return model;
     }
 }
