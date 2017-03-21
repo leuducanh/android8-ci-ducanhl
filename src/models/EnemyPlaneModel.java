@@ -7,7 +7,7 @@ import utils.CustomRandom;
  * Created by l on 2/27/2017.
  */
 public class EnemyPlaneModel extends GameModel{
-    public static final int ENEMYPLANE_SPEED = 5;
+    public static final int ENEMYPLANE_SPEED = 1;
 
     public EnemyPlaneModel(int x, int y, int width, int height) {
         super(x, y, width, height);

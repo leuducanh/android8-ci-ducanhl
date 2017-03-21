@@ -1,5 +1,6 @@
 package autoload;
 
+import controllers.BulletController;
 import controllers.EnemyPlaneController;
 import utils.Utils;
 
@@ -42,11 +43,11 @@ public class AutoLoadImage {
 
 
         for(int i = 1;i <= 3;i++){
-            whitePlaneImageMap.put("enemy_plane_white_" + i,Utils.loadImageFromRes("enemy_plane_white_" + i + ".png"));
+            whitePlaneImageMap.put("xuong" + i,Utils.loadImageFromRes("enemy_plane_white_" + i + ".png"));
         }
 
         for(int i = 1;i <= 3;i++){
-            yellowPlaneImageMap.put("enemy_plane_yellow_" + i,Utils.loadImageFromRes("enemy_plane_yellow_" + i + ".png"));
+            yellowPlaneImageMap.put("xuong" + i,Utils.loadImageFromRes("enemy_plane_yellow_" + i + ".png"));
         }
 
         bulletImageMap.put("bullet",Utils.loadImageFromRes("bullet.png"));

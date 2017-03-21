@@ -10,7 +10,7 @@ import java.util.Vector;
  * Created by l on 3/11/2017.
  */
 public class ControllerManager {
-    protected Vector<GameController> gameControllers;
+    public static Vector<GameController> gameControllers;
 
     public ControllerManager() {
         gameControllers = new Vector<>();
@@ -22,8 +22,8 @@ public class ControllerManager {
 
     public void run() {
         removeDeadGameControllers();
-        for (GameController gameController: this.gameControllers) {
-            gameController.run();
+        for(int i = 0;i < gameControllers.size();i++){
+            gameControllers.get(i).run();
         }
     }
 

@@ -46,10 +46,25 @@ public class BulletModel extends GameModel {
         y += BULLET_SPEED;
         x += BULLET_SPEED;
     }
+    public void moveBottomUp(){
+        y -= BULLET_SPEED;
+    }
+    public void moveRightUp(){
+        y -= BULLET_SPEED;
+        x += BULLET_SPEED;
+    }
+    public void moveLeftUp(){
+        y -= BULLET_SPEED;
+        x -= BULLET_SPEED;
+    }
 
     @Override
     public void collisionHandler(GameModel otherGameModel) {
 
+        if(otherGameModel instanceof PlayerPlaneModel){
+            planeFrom = Plane.ENEMY_PLANE;
+            otherGameModel.setDestroy(true);
+        }
     }
 
     public static enum Plane{

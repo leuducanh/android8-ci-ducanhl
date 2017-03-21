@@ -25,7 +25,7 @@ public class EnemyPlaneMoveBehavior {
     }
 
     public void setImage(){
-        enemyPlaneView.setImage(AutoLoadImage.enemyPlaneHashMapFactory(type).get("xuong1"));
+        enemyPlaneView.setImage(AutoLoadImage.enemyPlaneHashMapFactory(type).get("xuong" + drawCount));
         long currentTime = System.currentTimeMillis();
         if(currentTime - lastTimeDraw > delay){
             lastTimeDraw = currentTime;

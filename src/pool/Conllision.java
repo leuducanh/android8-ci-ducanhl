@@ -10,31 +10,28 @@ import java.util.Vector;
  */
 public class Conllision {
 
-    private Vector<GameController> gameControllers;
+    public static Vector<GameController> gameControllersCollision;
 
-    public void openPool(){
-        gameControllers = new Vector<>();
+    public static void openPool(){
+        gameControllersCollision = new Vector<>();
     }
 
-    public void addToThePool(GameController gameController){
-        gameControllers.add(gameController);
-    }
 
     public void checkCollision(){
-        for(int i = 0;i < gameControllers.size() - 1;i++){
-            for(int j = 0;j < gameControllers.size();j++){
-                if(gameControllers.get(i).getModel().checkContact(gameControllers.get(j).getModel())){
-                    gameControllers.get(i).getModel().collisionHandler(gameControllers.get(j).getModel());
-                    gameControllers.get(j).getModel().collisionHandler(gameControllers.get(i).getModel());
+        for(int i = 0;i < gameControllersCollision.size() - 1;i++){
+            for(int j = 0;j < gameControllersCollision.size();j++){
+                if(gameControllersCollision.get(i).getModel().checkContact(gameControllersCollision.get(j).getModel())){
+                    gameControllersCollision.get(i).getModel().collisionHandler(gameControllersCollision.get(j).getModel());
+                    gameControllersCollision.get(j).getModel().collisionHandler(gameControllersCollision.get(i).getModel());
                 }
             }
         }
     }
 
     public void delete(){
-        for(int i = 0;i < gameControllers.size();i++){
-            if(!gameControllers.get(i).getModel().isVisible()){
-                gameControllers.removeElementAt(i);
+        for(int i = 0;i < gameControllersCollision.size();i++){
+            if(!gameControllersCollision.get(i).getModel().isVisible()){
+                gameControllersCollision.removeElementAt(i);
             }
         }
     }

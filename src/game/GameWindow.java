@@ -37,7 +37,6 @@ public class GameWindow extends Frame {
 
     long now = System.currentTimeMillis();
 
-    public Conllision pool;
 
     PlayerPlaneColtroller playerPlaneController;
     Vector<PlayerBulletController> playerBulletControllers;
@@ -51,6 +50,7 @@ public class GameWindow extends Frame {
     ControllerManager controllerManager;
 
 
+    long lastTime = System.currentTimeMillis();
     public GameWindow(){
         setVisible(true);
         setSize(FRAME_WIDTH,FRAME_HEIGHT);
@@ -58,8 +58,7 @@ public class GameWindow extends Frame {
         offScreenImage = new BufferedImage(FRAME_WIDTH,FRAME_HEIGHT,BufferedImage.TYPE_INT_ARGB);
 
         //================================
-        pool = new Conllision();
-        pool.openPool();
+        Conllision.openPool();
         controllerManager = new ControllerManager();
         //==================================
         playerPlaneController = new PlayerPlaneColtroller(FRAME_WIDTH/2 - 45/2,FRAME_HEIGHT - 55,45,55);
@@ -72,11 +71,13 @@ public class GameWindow extends Frame {
 
         backgroundController = new BackgroundController(0,0,FRAME_WIDTH,FRAME_HEIGHT);
 
-        pool.openPool();
-        pool.addToThePool(playerPlaneController);
+       Conllision.gameControllersCollision.add(playerPlaneController);
         controllerManager.add(backgroundController);
 
         controllerManager.add(playerPlaneController);
+
+
+
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -131,16 +132,18 @@ public class GameWindow extends Frame {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    pool.delete();
-                    pool.checkCollision();
-                    addIsland();
+//                    pool.delete();
+//                    pool.checkCollision();
+//                    addIsland();
                     calculatePlaneCoordinate();
 
                     checkAndAddPlayerBullet();
 
+                    addEnemyPlane();
 //                    addEnemyPlane();
 //                    addEnemyBullet();
 
+                    calculatePlayerBullet();
                     controllerManager.run();
                     repaint();
 
@@ -171,13 +174,12 @@ public class GameWindow extends Frame {
             for(int i = 0;i < 3;i++){
                 PlayerBulletController playerBulletController = new PlayerBulletController(playerPlaneController.getModel().getX() + 45/2 - 45/2/2,playerPlaneController.getModel().getY() - 35/2, 10,30,i+1);
                 playerBulletControllers.add(playerBulletController);
-                pool.addToThePool(playerBulletController);
                 controllerManager.add(playerBulletController);
             }
         }else{
             PlayerBulletController playerBulletController = new PlayerBulletController(playerPlaneController.getModel().getX() + 45/2 - 45/2/2,playerPlaneController.getModel().getY() - 35/2, 10,30,0);
             playerBulletControllers.add(playerBulletController);
-            pool.addToThePool(playerBulletController);
+            Conllision.gameControllersCollision.add(playerBulletController);
             controllerManager.add(playerBulletController);
         }
 
@@ -203,6 +205,18 @@ public class GameWindow extends Frame {
         for(int i = 0;i < playerBulletControllers.size();i++){
             if(playerBulletControllers.get(i).getModel().getY() < 0){
                 playerBulletControllers.get(i).getModel().setVisible(false);
+            }
+        }
+    }
+
+    private void addEnemyPlane(){
+        EnemyPlaneController.EnemyPlaneType a = EnemyPlaneController.EnemyPlaneType.ENEMYWHITE;
+        if(System.currentTimeMillis() - lastTime > 1000){
+            lastTime = System.currentTimeMillis();
+            for(int i = 0;i < CustomRandom.customNextInt(3);i++){
+                EnemyPlaneController enemyPlaneController = EnemyPlaneController.create(CustomRandom.customNextInt(600),0,30,30, EnemyPlaneController.EnemyPlaneType.ENEMYWHITE,BulletController.BulletType.ROUND,1000, EnemyPlaneController.EnemyPlaneShootType.THREE, EnemyPlaneController.EnemyPlaneMoveType.TOP_DOWN);
+                ControllerManager.gameControllers.add(enemyPlaneController);
+                Conllision.gameControllersCollision.add(enemyPlaneController);
             }
         }
     }
@@ -269,13 +283,13 @@ public class GameWindow extends Frame {
 //        }
 //    }
 
-    private void calculateEnemyBullet(){
-        for(int i = 0;i < enemyBulletControllers.size();i++){
-            if(enemyBulletControllers.get(i).getModel().getY() >= FRAME_HEIGHT){
-                enemyBulletControllers.get(i).getModel().setVisible(false);
-            }
-        }
-    }
+//    private void calculateEnemyBullet(){
+//        for(int i = 0;i < enemyBulletControllers.size();i++){
+//            if(enemyBulletControllers.get(i).getModel().getY() >= FRAME_HEIGHT){
+//                enemyBulletControllers.get(i).getModel().setVisible(false);
+//            }
+//        }
+//    }
 
 
     private void calculatePlaneCoordinate(){
@@ -299,38 +313,38 @@ public class GameWindow extends Frame {
         }
     }
 
-    private void addIsland(){
-
-        if(System.currentTimeMillis()-IslandController.LAST_TIME_ADD_ISLAND >= IslandController.ADD_ISLAND_AFTER){
-            IslandController.LAST_TIME_ADD_ISLAND = System.currentTimeMillis();
-            Random r = new Random();
-            int count = r.nextInt(2) + 1;
-            if(count > 1){
-                IslandController.ADD_ISLAND_AFTER = (r.nextInt(5) + 1) * 1000;
-            }else{
-                IslandController.ADD_ISLAND_AFTER = (r.nextInt(4) + 1) * 1000;
-            }
-            Vector<GameModel> vGM =  new Vector<>();
-
-            for(int i = 0;i < count;i++){
-                Vector<Integer> v = CustomRandom.customGeneratePosition(vGM,FRAME_WIDTH);
-                IslandController islandController = new IslandController(v.get(0),0,v.get(1),CustomRandom.customNextInt(50) + GameModel.MIN_HEIGHT_OF_MODEL);
-                islandController.setRandomImage();
-                islandControllers.add(islandController);
-                controllerManager.add(islandController);
-                vGM.add(islandController.getModel());
-            }
-
-
-        }
-    }
-
-    private void calculateIsland(){
-        for(int i = 0;i < islandControllers.size();i++){
-            if(islandControllers.get(i).getModel().getY() > FRAME_HEIGHT){
-                islandControllers.get(i).getModel().setVisible(false);
-            }
-        }
-    }
+//    private void addIsland(){
+//
+//        if(System.currentTimeMillis()-IslandController.LAST_TIME_ADD_ISLAND >= IslandController.ADD_ISLAND_AFTER){
+//            IslandController.LAST_TIME_ADD_ISLAND = System.currentTimeMillis();
+//            Random r = new Random();
+//            int count = r.nextInt(2) + 1;
+//            if(count > 1){
+//                IslandController.ADD_ISLAND_AFTER = (r.nextInt(5) + 1) * 1000;
+//            }else{
+//                IslandController.ADD_ISLAND_AFTER = (r.nextInt(4) + 1) * 1000;
+//            }
+//            Vector<GameModel> vGM =  new Vector<>();
+//
+//            for(int i = 0;i < count;i++){
+//                Vector<Integer> v = CustomRandom.customGeneratePosition(vGM,FRAME_WIDTH);
+//                IslandController islandController = new IslandController(v.get(0),0,v.get(1),CustomRandom.customNextInt(50) + GameModel.MIN_HEIGHT_OF_MODEL);
+//                islandController.setRandomImage();
+//                islandControllers.add(islandController);
+//                controllerManager.add(islandController);
+//                vGM.add(islandController.getModel());
+//            }
+//
+//
+//        }
+//    }
+//
+//    private void calculateIsland(){
+//        for(int i = 0;i < islandControllers.size();i++){
+//            if(islandControllers.get(i).getModel().getY() > FRAME_HEIGHT){
+//                islandControllers.get(i).getModel().setVisible(false);
+//            }
+//        }
+//    }
 
 }

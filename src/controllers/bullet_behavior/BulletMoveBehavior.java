@@ -26,37 +26,30 @@ public class BulletMoveBehavior {
     }
 
     public void setImage(){
-        Vector<Image> images = new Vector<>();
+        Image image = null;
         switch (type){
             case DOUBLE:{
-                images.add(AutoLoadImage.bulletImageMap.get("bullet-double"));
+                image = AutoLoadImage.bulletImageMap.get("bullet-double");
                 break;
             }
             case LEFTDOWN:{
-                images.add(AutoLoadImage.bulletImageMap.get("bullet-left"));
+                image  = AutoLoadImage.bulletImageMap.get("bullet-left");
                 break;
             }
             case RIGHTDOWN:{
-                images.add(AutoLoadImage.bulletImageMap.get("bullet-right"));
+                image  = AutoLoadImage.bulletImageMap.get("bullet-right");
                 break;
             }
             case ROUND:{
-                images.add(AutoLoadImage.bulletImageMap.get("bullet-round"));
+                image = AutoLoadImage.bulletImageMap.get("bullet-round");
                 break;
             }
             case SINGLE:{
-                images.add(AutoLoadImage.bulletImageMap.get("bullet-single"));
+                image = AutoLoadImage.bulletImageMap.get("bullet-single");
                 break;
             }
         }
 
-        view.setImage(images.get(drawCount));
-        long currentTime = System.currentTimeMillis();
-        if(currentTime - lastTimeDraw > delay){
-            drawCount++;
-            if(drawCount >= howManyPicOnABullet){
-                drawCount = 0;
-            }
-        }
+        view.setImage(image);
     }
 }

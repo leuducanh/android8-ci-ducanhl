@@ -1,10 +1,7 @@
 package controllers;
 
 import autoload.AutoLoadImage;
-import controllers.bullet_behavior.BulletMoveBehavior;
-import controllers.bullet_behavior.BulletMoveLeftDown;
-import controllers.bullet_behavior.BulletMoveRightDown;
-import controllers.bullet_behavior.BulletMoveTop_Down;
+import controllers.bullet_behavior.*;
 import models.BulletModel;
 import models.EnemyPlaneModel;
 import models.GameModel;
@@ -51,7 +48,10 @@ public class BulletController extends GameController{
     public static enum BulletMoveType{
         TOP_DOWN,
         RIGHT_DOWN,
-        LEFT_DOWN
+        LEFT_DOWN,
+        BOTTOM_UP,
+        RIGHT_UP,
+        LEFT_UP
     }
 
     public void setBulletMoveBehavior(BulletMoveBehavior bulletMoveBehavior) {
@@ -78,6 +78,18 @@ public class BulletController extends GameController{
             }
             case LEFT_DOWN:{
                 bulletMoveBehavior = new BulletMoveLeftDown();
+                break;
+            }
+            case BOTTOM_UP:{
+                bulletMoveBehavior = new BulletMoveBottom_Up();
+                break;
+            }
+            case LEFT_UP:{
+                bulletMoveBehavior = new BulletMoveLeftUp();
+                break;
+            }
+            case RIGHT_UP:{
+                bulletMoveBehavior = new BulletMoveRightUp();
                 break;
             }
         }
